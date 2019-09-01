@@ -1,9 +1,17 @@
 {
-  "name": "md-links",
+  "name": "anabelcarrion-md-links",
   "version": "1.0.0",
   "description": "Software analiza archivos markdown",
-  "main": "index.js",
+  "main": "src/index.js",
+  "bin": {
+    "anabelcarrion-md-links": "bin/md-links",
+    "md-links": "bin/md-links"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
+    "md-links": "node -e 'require(\"./index.js\").mdLinks()'",
     "test": "jest"
   },
   "repository": {
@@ -22,6 +30,9 @@
   },
   "homepage": "https://github.com/anabelcarrion/SCL010-md-links#readme",
   "dependencies": {
+    "chalk": "^2.4.2",
+    "curriculum-parser": "github:Laboratoria/course-parser",
+    "esm": "^3.2.25",
     "fetch": "^1.1.0",
     "file-system": "^2.2.2",
     "filehound": "^1.17.3",
