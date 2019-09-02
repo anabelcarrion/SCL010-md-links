@@ -1,18 +1,14 @@
 // librerias importados
-
 const fileHound = require('filehound');
 const fs = require('fs');
 const marked = require('marked');
 const fetch = require('node-fetch');
 
 
-//aqui se elige que opcion desea ejecutar si validate o stats 
-const mdLinks = (args) => {
-  let path = args[2];
-  let option1 = args[3];
-  let option2 = args[4];
+//funcion principal
+const mdLinks = ( path, option) => {
   return new Promise((resolve, reject) => {
-    if (option1 === '--stats' && option2 === '--validate' || option2 === '--stats' && option1 === '--validate' || option1 === '--s' && option2 === '--v' || option2 === '--s' && option1 === '--v') {
+    if (option.stats && option.validate) {
        searchLinks(path)
          .then(links => {
            statsAndValidateLinks(links)
@@ -20,12 +16,12 @@ const mdLinks = (args) => {
                resolve(statsAndValidateLinks)
              })
          })
-    } else if (option1 === '--stats' || option1 === '--s') {
+    } else if (option.stats) {
       searchLinks(path)
         .then(links => {
           resolve(stats(links))
         })
-    } else if (option1 === '--validate' || option1 === '--v') {
+    } else if (option.validate) {
       searchLinks(path)
         .then(links => {
           urlValidate(links)
@@ -44,10 +40,22 @@ const mdLinks = (args) => {
 
 // Imprime en terminal los archivos que concuerden con la extención del formato markdown ".md".
 const readPath = (path) => {
-  return fileHound.create()
-    .paths(path)
-    .ext('.md')
-    .find();
+      return new Promise((resolve,reject) => {
+      FileHound.create()
+      .paths(path)
+      .ext('md')
+      .find()
+      .then(files => {
+        console.log("Archivos MD encontrados: ", files);
+        if(files.length != 0){
+        resolve(files)}
+        else {(console.log("No se encontraron archivos .md dentro de " + path))}
+      })
+      .catch(err => {
+      reject(new Error("Ruta no es válida"))
+      })
+    })
+
 };
 
 // Lee los archivos y extrae links con su información adicional, texto que lo acompaña y hubicación.
@@ -62,6 +70,7 @@ const searchLinks = (path) => {
       renderer.link = function (href, title, text) {
         links.push({
           href: href,
+            
           text: text,
           file: path
         })
@@ -73,6 +82,7 @@ const searchLinks = (path) => {
     });
   })
 };
+
 
 //valida cada link y agrega "status" a cada uno segun respuesta del fetch
 const urlValidate = (links) =>{
@@ -132,7 +142,7 @@ const statsAndValidateLinks = (links) =>{
   })
 }
 
-
+//exportando el modulo de funciones
 module.exports = {
   mdLinks,
   readPath,
