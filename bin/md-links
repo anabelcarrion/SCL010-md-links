@@ -2,22 +2,3 @@
 require = require('esm')(module /*, options*/);
 require('../src/index.js').init( process.argv); 
    
-
-let options = {
-    stats: false,
-    validate: false
-} 
-
-let firstOption = process.argv[3];
-let secondOption = process.argv[4];
-
-if(firstOption ==="--validate" && secondOption === "--stats"||firstOption==="--stats" && secondOption === "--validate"||firstOption ==="--v" && secondOption === "--s"||firstOption==="--s" && secondOption === "--v"){
-    options.validate = true;
-    options.stats = true;
-}else if(firstOption==="--stats"|| firstOption === "--s"){
-    options.stats = true;
-    options.validate = false;
-}else if(firstOption==="--validate"|| firstOption === "--v"){
-    options.validate = true;
-    options.stats = false;
-};

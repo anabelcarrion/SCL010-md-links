@@ -6,16 +6,16 @@ const fetch = require('node-fetch');
 
 
 //funcion principal
-const mdLinks = ( path, option) => {
+const mdLinks = (path, option) => {
   return new Promise((resolve, reject) => {
     if (option.stats && option.validate) {
-       searchLinks(path)
-         .then(links => {
-           statsAndValidateLinks(links)
-             .then(statsAndValidateLinks => {
-               resolve(statsAndValidateLinks)
-             })
-         })
+      searchLinks(path)
+        .then(links => {
+          statsAndValidateLinks(links)
+            .then(statsAndValidateLinks => {
+              resolve(statsAndValidateLinks)
+            })
+        })
     } else if (option.stats) {
       searchLinks(path)
         .then(links => {
@@ -36,25 +36,27 @@ const mdLinks = ( path, option) => {
         })
     }
   })
-}
+};
 
 // Imprime en terminal los archivos que concuerden con la extención del formato markdown ".md".
 const readPath = (path) => {
-      return new Promise((resolve,reject) => {
-      FileHound.create()
+  return new Promise((resolve, reject) => {
+    FileHound.create()
       .paths(path)
       .ext('md')
       .find()
       .then(files => {
         console.log("Archivos MD encontrados: ", files);
-        if(files.length != 0){
-        resolve(files)}
-        else {(console.log("No se encontraron archivos .md dentro de " + path))}
+        if (files.length != 0) {
+          resolve(files)
+        } else {
+          (console.log("No se encontraron archivos .md dentro de " + path))
+        }
       })
       .catch(err => {
-      reject(new Error("Ruta no es válida"))
+        reject(new Error("Ruta no es válida"))
       })
-    })
+  })
 
 };
 
@@ -70,7 +72,6 @@ const searchLinks = (path) => {
       renderer.link = function (href, title, text) {
         links.push({
           href: href,
-            
           text: text,
           file: path
         })
@@ -85,26 +86,26 @@ const searchLinks = (path) => {
 
 
 //valida cada link y agrega "status" a cada uno segun respuesta del fetch
-const urlValidate = (links) =>{
+const urlValidate = (links) => {
   return new Promise((resolve, reject) => {
-     
-      let fetchLinks = links.map(x=>{  
-        
-        return fetch(x.href).then(res =>{
-            x.statusCode = res.status;
-            x.status=res.statusText;
-          }).catch((err)=>{
-            x.status = err.code
-          }) 
+
+    let fetchLinks = links.map(x => {
+
+      return fetch(x.href).then(res => {
+        x.statusCode = res.status;
+        x.status = res.statusText;
+      }).catch((err) => {
+        x.status = err.code
       })
-      
-      Promise.all(fetchLinks).then(res=>{
-        resolve(links)
-      })
-      
-    
+    })
+
+    Promise.all(fetchLinks).then(res => {
+      resolve(links)
+    })
+
+
   })
-}
+};
 
 //stats de cada link 
 const stats = (links) => {
@@ -117,30 +118,31 @@ const stats = (links) => {
 };
 
 //entrega la cantidad de links totales, links con status OK y links rotos.
-const statsAndValidateLinks = (links) =>{
-  return new Promise((resolve,reject)=>{
-    urlValidate(links).then(links=>{
-      const statusLinks = links.map(x=>x.statusCode)
+const statsAndValidateLinks = (links) => {
+  return new Promise((resolve, reject) => {
+    urlValidate(links).then(links => {
+      const statusLinks = links.map(x => x.statusCode)
       let okLinks = statusLinks.toString().match(/200/g)
       const totalLinks = links.length
       let brokenLinks = 0
 
-      if(okLinks != null){
+      if (okLinks != null) {
         okLinks = okLinks.length
-      }else{
-        okLinks =  0
+      } else {
+        okLinks = 0
       }
-      
-      brokenLinks = totalLinks-okLinks
+
+      brokenLinks = totalLinks - okLinks
       resolve({
-        total:totalLinks,
+        total: totalLinks,
         ok: okLinks,
-        broken:brokenLinks})
-    }).catch(err=>{
+        broken: brokenLinks
+      })
+    }).catch(err => {
       reject(err)
     })
   })
-}
+};
 
 //exportando el modulo de funciones
 module.exports = {
@@ -150,35 +152,4 @@ module.exports = {
   urlValidate,
   stats,
   statsAndValidateLinks
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+};
