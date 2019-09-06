@@ -7,15 +7,11 @@ const mdLinks = require('../src/md-links.js');
 
 describe('mdLinks', () => {
 
-  test('deberia estar definida', () => {
+  test('deberia estar definida mdLinks', () => {
     expect(mdLinks).toBeDefined();
   });
 
-  test('deberia estar definida', () => {
-    expect(mdLinks.searchLinks).toBeDefined();
-  });
-
-  test('deberia estar definida', () => {
+  test('deberia estar definida urlValidate', () => {
     expect(mdLinks.urlValidate).toBeDefined();
   });
 
