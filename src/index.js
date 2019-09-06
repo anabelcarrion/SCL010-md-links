@@ -20,7 +20,6 @@ export const init = (args) => {
     }
   })
 
-
   mdLinks.mdLinks(path, options).then(resList => {
     resList.forEach(res => {
       if (options.validate && options.stats) {
