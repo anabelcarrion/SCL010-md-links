@@ -22,7 +22,6 @@ export const init = (args) => {
 
 
   mdLinks.mdLinks(path, options).then(resList => {
-    console.log(resList)
     resList.forEach(res => {
       if (options.validate && options.stats) {
         if (res.total === 0) {
